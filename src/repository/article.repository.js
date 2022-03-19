@@ -36,4 +36,36 @@ const getArticles = async (query) => {
   }
 };
 
-module.exports = { createArticle, getArticle, getArticles };
+const updateArticle = async (query, article) => {
+  try {
+    await Article.update(article, {
+      where: query,
+    });
+    return [true, null];
+  } catch (err) {
+    logger.error(err);
+    return [null, err.message];
+  }
+};
+
+const deleteArticle = async (query) => {
+  try {
+    await Article.destroy({
+      where: query,
+    });
+    return [true, null];
+  } catch (err) {
+    logger.error(err);
+    return [null, err.message];
+  }
+};
+
+const ArticleRepository = {
+  createArticle,
+  getArticle,
+  getArticles,
+  updateArticle,
+  deleteArticle,
+};
+
+module.exports = ArticleRepository;

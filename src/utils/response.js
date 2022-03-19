@@ -5,7 +5,7 @@ const ResponseStatus = {
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
-  UNPROCESSABLE_ENTRY: 422,
+  UNPROCESSABLE_ENTITY: 422,
   INTERNAL_ERROR: 500,
 };
 
@@ -58,6 +58,12 @@ const serverErrorResponse = (res, msg = 'Internal server error') => {
   });
 };
 
+const unprocessableEntityResponse = (res, msg = 'Unprocessable entity') => {
+  res.status(ResponseStatus.UNPROCESSABLE_ENTITY).send({
+    msg,
+  });
+};
+
 module.exports = {
   successResponse,
   createdSuccessResponse,
@@ -66,4 +72,5 @@ module.exports = {
   badRequestResponse,
   forbiddenResponse,
   serverErrorResponse,
+  unprocessableEntityResponse,
 };
