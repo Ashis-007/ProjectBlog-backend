@@ -1,6 +1,5 @@
-const bcrypt = require('bcrypt');
-
-const UserRepository = require('../../../repository/user.repository');
+// Utils
+const logger = require('../../../logger');
 const { SALT_ROUNDS } = require('../../../utils/config');
 const { generateAccessToken } = require('../../../utils/token');
 const {
@@ -8,23 +7,30 @@ const {
   createdSuccessResponse,
   serverErrorResponse,
   badRequestResponse,
+  unprocessableEntityResponse,
+  unauthorizedResponse,
 } = require('../../../utils/response');
-const logger = require('../../../logger');
+
+// Packages
+const bcrypt = require('bcrypt');
+
+// Repository
+const UserRepository = require('../../../repository/user.repository');
+
+// Joi
+const { userSchema } = require('../../../joi');
 
 const signUpUser = async (req, res) => {
   try {
-    if (req.body.password.length < 6) {
-      return badRequestResponse(
-        res,
-        'Password should be atleat 6 characters long'
-      );
-    }
+    let body = userSchema.validate(req.body);
+    if (body.error) return unprocessableEntityResponse(res, body.error.message);
+    body = body.value;
 
     const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
     req.body.password = hashedPassword;
 
-    const [user, err] = await UserRepository.createUser(req.body);
-    if (err) return badRequestResponse(res, err);
+    const [user, errForUser] = await UserRepository.createUser(req.body);
+    if (errForUser) return badRequestResponse(res, errForUser);
 
     return createdSuccessResponse(
       res,
@@ -42,9 +48,8 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const [user, err] = await UserRepository.getUser({ email });
-    if (err || !user) {
+    if (err || !user)
       return badRequestResponse(res, 'Invalid email or password');
-    }
 
     if (await bcrypt.compare(password, user.password)) {
       const accessToken = generateAccessToken({
