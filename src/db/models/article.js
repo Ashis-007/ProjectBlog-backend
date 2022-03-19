@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   article.init(
     {
+      article_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       title: { type: DataTypes.STRING, allowNull: false },
       body: { type: DataTypes.TEXT, allowNull: false },
       likes: { type: DataTypes.INTEGER, defaultValue: 0 },
