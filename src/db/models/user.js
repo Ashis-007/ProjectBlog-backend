@@ -25,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: DataTypes.UUIDV4,
       },
-      first_name: { type: DataTypes.STRING, allowNull: false },
-      last_name: { type: DataTypes.STRING, allowNull: false },
+      first_name: { type: DataTypes.STRING(30), allowNull: false },
+      last_name: { type: DataTypes.STRING(30), allowNull: false },
       username: {
         type: DataTypes.STRING(30),
         allowNull: false,
