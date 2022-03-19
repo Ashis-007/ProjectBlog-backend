@@ -9,6 +9,7 @@ const {
   badRequestResponse,
   unprocessableEntityResponse,
   unauthorizedResponse,
+  notFoundResponse,
 } = require('../../../utils/response');
 
 // Packages
@@ -47,9 +48,13 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const [user, err] = await UserRepository.getUser({ email });
-    if (err || !user)
-      return badRequestResponse(res, 'Invalid email or password');
+    const [user, errForUser] = await UserRepository.getUser({ email });
+    if (errForUser) return badRequestResponse(res, errForUser);
+    if (!user)
+      return notFoundResponse(
+        res,
+        'Invalid email or password. Please try again.'
+      );
 
     if (await bcrypt.compare(password, user.password)) {
       const accessToken = generateAccessToken({
