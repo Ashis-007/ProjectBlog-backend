@@ -5,6 +5,7 @@ const logger = require('./logger');
 
 // imported routes
 const userRoutes = require('./routes/user/user.routes');
+const articleRoutes = require('./routes/articles/article.routes');
 
 // cron jobs
 
@@ -17,6 +18,7 @@ app.use(morgan('short', { stream: logger.stream }));
 
 // routes
 app.use('/users', userRoutes);
+app.use('/articles', articleRoutes);
 
 app.get('/', (_, res) => {
   res
