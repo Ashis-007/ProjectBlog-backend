@@ -22,8 +22,7 @@ const createArticle = async (req, res) => {
     if (body.error) return unprocessableEntityResponse(res, body.error.message);
     body = body.value;
 
-    const [createdArticle, errForCreatedArticle] =
-      await ArticleRepository.createArticle(body);
+    const [createdArticle, errForCreatedArticle] =await ArticleRepository.createArticle(body);
     if (errForCreatedArticle)
       return serverErrorResponse(res, errForCreatedArticle);
 

@@ -1,6 +1,10 @@
+// Utils
 const logger = require('../logger');
 
+// Models
 const { Article } = require('../db/models');
+
+// Packages
 
 const createArticle = async (article) => {
   try {
